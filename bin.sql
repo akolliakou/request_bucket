@@ -3,8 +3,8 @@ CREATE TABLE bin (
   createdAt timestamp NOT NULL DEFAULT timezone('utc', now()),
   lastUsed timestamp NOT NULL DEFAULT timezone('utc', now()),
   requestCount int DEFAULT 0,
-  binStatus varchar(255) DEFAULT 'active'
-  binURL varchar(255) UNIQUE NOT NULL;
+  binStatus varchar(255) DEFAULT 'active',
+  binURL varchar(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE request (

@@ -1,0 +1,10 @@
+extends layout 
+
+block main
+  h1 Request Bin
+  form(id="home-form" action="/request-bin/create-bin" method="POST")
+    input(type="submit", value="Create New Bin")
+
+  p Remember to keep track of your endpoints
+  p Use your endpoint like so: www.#{currentPage}/request-bin/your-end-point-here
+     

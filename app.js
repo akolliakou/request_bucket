@@ -10,6 +10,10 @@ const PORT = process.env.PORT;
 
 const pool = new Pool();
 
+app.set("views", "./views");
+app.set("view engine", "pug");
+
+app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 
@@ -36,22 +40,28 @@ const requestBinSchema = new mongoose.Schema({
 
 const Request = mongoose.model('requests', requestBinSchema)
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html")
+app.get("/request-bin", (req, res) => {
+  res.render('homepage', {
+    currentPage: req.get('host')
+  })
 });
 
-app.get("/:id", (req, res) => {
+app.get("/request-bin/:id", (req, res) => {
   try {
     pool.connect(async (error, client, release) => {
       let resp = await client.query(`SELECT * FROM bin WHERE binURL = '${req.params.id}'`);
       release();
       if (resp.rows.length === 0) {
-        res.redirect('/');
+        res.redirect('/request-bin');
       } else {
         let binID = resp.rows[0].binid;
         let documents = await Request.find({ bin_id: binID })
-        console.log(documents);
-        res.send(documents);
+
+        res.render("bin", {
+          documents,
+          endpoint: req.params.id
+        })
+
       }
     })
   } catch (error) {
@@ -59,23 +69,23 @@ app.get("/:id", (req, res) => {
   }
 })
 
-app.post("/create-bin", (req, res) => {
+app.post("/request-bin/create-bin", (req, res) => {
   const endpoint = uuidv4();
   try {
     pool.connect(async (error, client, release) => {
     await client.query(`INSERT INTO bin (binURL) VALUES ('${endpoint}')`);
     release();
-    res.send(endpoint);
+    // res.send(endpoint);
+    res.render("endpoint", {
+      endpoint
+    })
     })
   } catch (error) {
       console.log(error);
   }
 });
 
-app.post("/:id", (req, res) => {
-  console.log(req.headers)
-  console.log(req.body)
-
+app.post("/request-bin/:id", (req, res) => {
   try {
     pool.connect(async (error, client, release) => {
       let resp = await client.query(`SELECT binID FROM bin WHERE binURL = '${req.params.id}'`);
@@ -88,7 +98,6 @@ app.post("/:id", (req, res) => {
           body: JSON.stringify(req.body),
           bin_id: resp.rows[0].binid
         })
-
         try {
           let newRequest = await requestBin.save();
           res.status(201).send(newRequest);

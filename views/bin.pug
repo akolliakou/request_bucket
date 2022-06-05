@@ -1,0 +1,11 @@
+extends layout
+
+block main 
+  h1(id="bin_title") BIN #{endpoint}
+  each document, index in documents
+    div(class="document")
+      h2(class="request_title") Request #{index + 1}
+      h2 Headers
+      p= document.headers
+      h2 Body
+      p= document.body

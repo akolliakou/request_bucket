@@ -1,0 +1,10 @@
+### GET homepage
+GET http://localhost:3002/request-bin
+
+### POST to bin
+POST http://localhost:3002/request-bin/1d1e8d33-5d7b-45b0-b0f2-e8e4ccefbfd6
+Content-Type: application/json
+
+{
+  "info": "another POST"
+}
