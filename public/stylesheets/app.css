@@ -1,0 +1,66 @@
+/* Homepage / General Style */
+
+body {
+  font: normal 16px Georgia MS, Arial, sans-serif;
+  color: #060606;
+  letter-spacing: 1px;
+  position: relative;
+  text-align: center;
+  background-color: rgb(237, 229, 229);
+}
+
+h1 {
+  font-size: 60px;
+  padding: 40px;
+}
+
+input[type="submit"] {
+  padding: 20px;
+  font-size: 20px;
+  background-color: rgb(97, 97, 227);
+  color: white;
+  border-radius: 8%;
+}
+
+input[type="submit"]:hover {
+  background-color: rgb(237, 229, 229);
+  color: rgb(97, 97, 227);
+}
+
+/* Bin Page */
+#bin_title {
+  font-size: 40px;
+}
+
+.document {
+  border: 2px solid rgb(97, 97, 227);
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.request_title {
+  padding: 5px;
+  font-size: 20px;
+}
+
+#home-form {
+  margin-bottom: 20px;
+}
+
+/* New Endpoint Page */
+#title_endpoint {
+  padding: 40px;
+  font-size: 40px;
+}
+
+#div_endpoint {
+  border: 2px solid rgb(97, 97, 227);
+  border-radius: 5px;
+  margin: 20px;
+  padding: 10px;
+  min-width: 500px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
