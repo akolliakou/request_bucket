@@ -10,12 +10,29 @@ const PORT = process.env.PORT;
 const ngrok = require('ngrok');
 const pool = new Pool();
 
+// IO is a server engine instance that manages Sockets 
+const { createServer } = require("http");
+const httpServer = createServer(app)
+const { Server } = require("socket.io");
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+    methods: ["GET", "POST"]
+  }
+});
+
 app.set("views", "./views");
 app.set("view engine", "pug");
 
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
+
+// Add middleware so that all routes have access to io server
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
 
 mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true })
 const db = mongoose.connection;
@@ -46,6 +63,13 @@ const requestBinSchema = new mongoose.Schema({
 
 const Request = mongoose.model('requests', requestBinSchema)
 
+// Server listens for connection events from incoming sockets 
+io.on('connection', (socket) => {
+  // initial connections always HTTP polling
+  // upgraded to websocket protocol if handshake successful
+  console.log(`--user connected: ${socket.id} via: ${socket.conn.transport.name}`); 
+});
+
 app.get("/", async (req, res) => {
   res.render('homepage', {
     currentPage: req.get('host'),
@@ -64,10 +88,18 @@ app.get("/:id", (req, res) => {
         let binID = resp.rows[0].binid;
         let documents = await Request.find({ bin_id: binID })
 
-        res.render("bin", {
-          documents,
-          endpoint: req.params.id
+        documents = documents.map((doc, idx) => {
+          doc['requestNumber'] = idx + 1
+          return doc;
         })
+
+        res.json(documents)
+
+        // Optional Pug Template for Bucket -- needs CSS work
+        // res.render("bin", {
+        //   documents,
+        //   endpoint: req.params.id
+        // })
 
       }
     })
