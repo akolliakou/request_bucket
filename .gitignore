@@ -1,2 +1,11 @@
 node_modules
 .env
+
+PORT = 3002
+PGPORT = 5432
+PGHOST = localhost
+PGDATABASE = 'request_bin'
+PGUSER = 'arjun'
+PGPASSWORD = 'secret'
+
+MONGODB_URL = 'mongodb://localhost:27017/request_bin'
