@@ -40,19 +40,19 @@ const requestBinSchema = new mongoose.Schema({
 
 const Request = mongoose.model('requests', requestBinSchema)
 
-app.get("/request-bin", (req, res) => {
+app.get("/", (req, res) => {
   res.render('homepage', {
     currentPage: req.get('host')
   })
 });
 
-app.get("/request-bin/:id", (req, res) => {
+app.get("/:id", (req, res) => {
   try {
     pool.connect(async (error, client, release) => {
       let resp = await client.query(`SELECT * FROM bin WHERE binURL = '${req.params.id}'`);
       release();
       if (resp.rows.length === 0) {
-        res.redirect('/request-bin');
+        res.redirect('/');
       } else {
         let binID = resp.rows[0].binid;
         let documents = await Request.find({ bin_id: binID })
@@ -69,7 +69,7 @@ app.get("/request-bin/:id", (req, res) => {
   }
 })
 
-app.post("/request-bin/create-bin", (req, res) => {
+app.post("/create-bin", (req, res) => {
   const endpoint = uuidv4();
   try {
     pool.connect(async (error, client, release) => {
@@ -85,7 +85,7 @@ app.post("/request-bin/create-bin", (req, res) => {
   }
 });
 
-app.post("/request-bin/:id", (req, res) => {
+app.post("/:id", (req, res) => {
   try {
     pool.connect(async (error, client, release) => {
       let resp = await client.query(`SELECT binID FROM bin WHERE binURL = '${req.params.id}'`);
