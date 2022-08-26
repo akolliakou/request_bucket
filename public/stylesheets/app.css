@@ -68,6 +68,13 @@ input[type="submit"]:hover {
 
 #bucket {
   max-width: 200px;
-  max-hieght: 400px;
+  max-height: 400px;
   margin-bottom: 20px;
+}
+
+.bin-para {
+  max-width: 800px;
+  text-overflow: ellipsis;
+/* Required for text-overflow to do anything */
+/* overflow: hidden; */
 }

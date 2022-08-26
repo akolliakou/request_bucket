@@ -1,11 +1,11 @@
 extends layout
 
 block main 
-  h1(id="bin_title") BIN #{endpoint}
+  h1(id="bin_title") BUCKET #{endpoint}
   each document, index in documents
     div(class="document")
       h2(class="request_title") Request #{index + 1}
       h2 Headers
-      p= document.headers
+      p(class="bin-para")= document.headers.split(',').join('\n')
       h2 Body
-      p= document.body
+      p(class="bin-para")= document.body.split(',').join('\n')
